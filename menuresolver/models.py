@@ -13,10 +13,10 @@ from django.contrib.contenttypes.models import ContentType
 @register_snippet
 class Menu(models.Model):
     menu_text = models.CharField(max_length = 255)
-    slug = models.SlugField(max_length = 255)
+    slug = models.SlugField(max_length = 255, blank=True, null=True)
 
     wrap_tag = models.CharField("Tag HTML", max_length = 255, default="ul")
-    class_tag = models.CharField("Class", max_length = 255, default="", null=True)
+    class_tag = models.CharField("Class", max_length = 255, default="", blank=True, null=True)
     attrs_tag = models.CharField("Atributos", max_length = 255, default="", blank=True, null=True)
 
     # Representacion 
@@ -50,7 +50,7 @@ class Item(Orderable):
     )
     menu = models.ForeignKey("menuresolver.Menu", related_name="items")
     item_text = models.CharField("Titulo del item", max_length = 255)
-    slug = models.CharField(max_length = 255)
+    slug = models.CharField(max_length = 255, blank=True, null=True)
     #URl Alternativa
     url = models.URLField("URL alternativa", blank=True, null=True)
 
@@ -60,7 +60,7 @@ class Item(Orderable):
 
     #Manipulacion HTML
     wrap_tag = models.CharField("Tag HTML", max_length = 255, default="li") #<li><a %(attrs)s>%(inside)s</%(tag)s>
-    class_tag = models.CharField("Class", max_length = 255, null=True)
+    class_tag = models.CharField("Class", max_length = 255, default="", blank=True, null=True)
     attrs_tag = models.CharField("Atributos", max_length = 255, blank=True, null=True)
     
     link_to_email = models.CharField("Link a Mail", max_length=255, blank=True,
