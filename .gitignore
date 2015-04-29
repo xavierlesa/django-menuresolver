@@ -1,3 +1,6 @@
+#Comp Files *.pyc
+*.pyc
+
 #Vim 
 *.swp
 
