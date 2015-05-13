@@ -1,16 +1,19 @@
 # -*- encoding:utf-8 -*-
 
 from django.db import models
-from wagtail.wagtailcore.models import Orderable
 from modelcluster.fields import ParentalKey
 from django.template.defaultfilters import slugify
-from wagtail.wagtailadmin.edit_handlers import FieldPanel, FieldRowPanel, InlinePanel
-from wagtail.wagtailsnippets.models import register_snippet
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
+class Orderable(models.Model):
+    sort_order = models.IntegerField(null=True, blank=True, editable=False)
+    sort_order_field = 'sort_order'
 
-@register_snippet
+    class Meta:
+        abstract = True
+        ordering = ['sort_order']
+
 class Menu(models.Model):
     menu_text = models.CharField(max_length = 255)
     slug = models.SlugField(max_length = 255, blank=True, null=True)
@@ -19,7 +22,6 @@ class Menu(models.Model):
     class_tag = models.CharField("Class", max_length = 255, default="", blank=True, null=True)
     attrs_tag = models.CharField("Atributos", max_length = 255, default="", blank=True, null=True)
 
-    # Representacion 
     def __unicode__(self):
         return self.menu_text
 
@@ -27,20 +29,8 @@ class Menu(models.Model):
         if not self.slug:
             self.slug = slugify(self.menu_text)
         super(Menu, self).save(*args,**kwargs)
-    #Visualizacion de Paneles 
-    panels = [
-            FieldPanel('menu_text', classname="full title"),
-            FieldPanel('slug'),
-            FieldRowPanel([
-                FieldPanel('wrap_tag', classname="col4"),
-                FieldPanel('class_tag', classname="col4"),
-                FieldPanel('attrs_tag', classname="col4"),
-            ]),
-        ]
-#Fin Class Menu
 
 
-@register_snippet
 class Item(Orderable):
     LINK_TARGET_CHOICES = (
             (None, u"nada"),
@@ -51,14 +41,14 @@ class Item(Orderable):
     menu = models.ForeignKey("menuresolver.Menu", related_name="items")
     item_text = models.CharField("Titulo del item", max_length = 255)
     slug = models.CharField(max_length = 255, blank=True, null=True)
-    #URl Alternativa
+    # URl Alternativa
     url = models.URLField("URL alternativa", blank=True, null=True)
 
     content_type = models.ForeignKey(ContentType, blank=True, null=True)
     object_id = models.PositiveIntegerField(blank=True, null=True)
     content_object = GenericForeignKey('content_type', 'object_id')
 
-    #Manipulacion HTML
+    # Manipulacion HTML
     wrap_tag = models.CharField("Tag HTML", max_length = 255, default="li") #<li><a %(attrs)s>%(inside)s</%(tag)s>
     class_tag = models.CharField("Class", max_length = 255, default="", blank=True, null=True)
     attrs_tag = models.CharField("Atributos", max_length = 255, blank=True, null=True)
@@ -87,36 +77,16 @@ class Item(Orderable):
             try:
                 url = self.content_object.url
             except:
-                url = self.slug
+                url = "/%s/" % self.slug
 
         return url
     
-    #Bool - Anidamiento de menues
     def is_menu(self):
+        """
+        Bool - Anidamiento de menues
+        """
+
         return self.content_type and isinstance(self.content_object, Menu)
 
-    #Representacion 
     def __unicode__(self):
         return "%s -> %s" % (self.menu, self.item_text)
-
-    panels = [
-            FieldPanel('menu'),
-            FieldPanel('item_text', classname="full"),
-            FieldPanel('slug'),
-            FieldPanel('url'),
-            FieldRowPanel([
-                FieldPanel('wrap_tag', classname="col4"),
-                FieldPanel('class_tag', classname="col4"),
-                FieldPanel('attrs_tag', classname="col4"),
-            ]),
-            FieldRowPanel([
-                FieldPanel('content_type',classname="col7"),
-                FieldPanel('object_id', classname="col3"),
-                ]),
-            FieldPanel('link_to_email'),
-            FieldRowPanel([
-                FieldPanel('is_link', classname="col3"),
-                FieldPanel('link_target', classname="col7"),
-                ]),
-            ]
-# Fin Class Item

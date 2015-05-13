@@ -5,9 +5,9 @@
             {% load menuresolver_tags %}
             {% create_menu item.content_object.slug %}
         {% elif item.is_link %}
-        <a {{ item.attrs_tag|safe }} href="{{ item.get_absolute_url }}" {% if item.link_target %}target="{{ item.link_target }}"{% endif %}>{{ item.item_text }}</a>
+        <a {{ item.attrs_tag|safe }} href="{{ item.get_absolute_url }}" {% if item.link_target %}target="{{ item.link_target }}"{% endif %}>{{ item.item_text|safe }}</a>
         {% else %}
-        {{ item.item_text }}
+        {{ item.item_text|safe }}
         {% endif %}
     </{{ item.wrap_tag }}>
     {% endfor %}
