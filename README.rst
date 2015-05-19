@@ -16,3 +16,6 @@ INSTALLED_APPS = (
 )
 
 Register it in the admin page and let's create your own menues.
+
+
+Add into your template '{% load menuresolver_tags %}' and '{% create_menu [slug_of_menu] %}' to render.

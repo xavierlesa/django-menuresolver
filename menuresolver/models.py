@@ -1,7 +1,6 @@
 # -*- encoding:utf-8 -*-
 
 from django.db import models
-from modelcluster.fields import ParentalKey
 from django.template.defaultfilters import slugify
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
