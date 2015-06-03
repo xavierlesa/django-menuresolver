@@ -43,7 +43,7 @@ class Item(Orderable):
     # URl Alternativa
     url = models.URLField("URL alternativa", blank=True, null=True)
 
-    content_type = models.ForeignKey(ContentType, blank=True, null=True)
+    content_type = models.ForeignKey(ContentType, blank=True, null=True, related_name="+")
     object_id = models.PositiveIntegerField(blank=True, null=True)
     content_object = GenericForeignKey('content_type', 'object_id')
 
