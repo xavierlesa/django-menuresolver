@@ -37,7 +37,7 @@ class Item(Orderable):
             ("_new", u"Nueva ventana"),
             ("_top", u"Arriba"),
     )
-    menu = models.ForeignKey("menuresolver.Menu", related_name="item_menu")
+    menu = models.ForeignKey("menuresolver.Menu", related_name="items")
     item_text = models.CharField("Titulo del item", max_length = 255)
     slug = models.CharField(max_length = 255, blank=True, null=True)
     # URl Alternativa
