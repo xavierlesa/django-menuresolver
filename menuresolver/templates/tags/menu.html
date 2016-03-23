@@ -1,7 +1,11 @@
 <{{ default_menu.wrap_tag }} {% if default_menu.class_tag %}class="{{ default_menu.class_tag }}"{% endif %}{{ default_menu.attrs_tag|safe }}>
     {% for item in default_menu.items.all %}
+    {% if item.template %}
+    {{ item.template|safe }}
+    {% else %}
     <{{ item.wrap_tag }} {% if item.class_tag %}class="{{ item.class_tag }}"{% endif %}>
         {% if item.is_menu %}
+        <a {{ item.attrs_tag|safe }} href="{{ item.get_absolute_url }}" {% if item.link_target %}target="{{ item.link_target }}"{% endif %}>{{ item.item_text|safe }}</a>
             {% load menuresolver_tags %}
             {% create_menu item.content_object.slug %}
         {% elif item.is_link %}
@@ -10,5 +14,6 @@
         {{ item.item_text|safe }}
         {% endif %}
     </{{ item.wrap_tag }}>
+    {% endif %}
     {% endfor %}
 </{{ default_menu.wrap_tag }}>
